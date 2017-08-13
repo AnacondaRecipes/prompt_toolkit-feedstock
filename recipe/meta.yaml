@@ -50,6 +50,7 @@ about:
     replacement for GNU readline, but it can be much more than that.
   doc_url: http://python-prompt-toolkit.readthedocs.io
   dev_url: https://github.com/jonathanslenders/python-prompt-toolkit
+  doc_source_url: https://github.com/jonathanslenders/python-prompt-toolkit/blob/master/docs/index.rst
 
 extra:
   recipe-maintainers:
