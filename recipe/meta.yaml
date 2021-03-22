@@ -1,4 +1,4 @@
-{% set version = "3.0.7" %}
+{% set version = "3.0.17" %}
 
 package:
   name: prompt-toolkit
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/p/prompt_toolkit/prompt_toolkit-{{ version }}.tar.gz
-  sha256: 822f4605f28f7d2ba6b0b09a31e25e140871e96364d1d377667b547bb3bf4489
+  sha256: 9397a7162cf45449147ad6042fa37983a081b8a73363a5253dd4072666333137
 
 build:
   number: 0
@@ -18,12 +18,13 @@ outputs:
     script: build_base.bat  # [win]
     script: build_base.sh  # [not win]
     requirements:
+      #build:
+        #- python                                 # [build_platform != target_platform]
       host:
         - python >=3.6
         - pip
       run:
         - python >=3.6
-        - pygments
         - wcwidth
       run_constrained:
         - prompt_toolkit {{ version }}
