@@ -21,10 +21,10 @@ outputs:
       #build:
         #- python                                 # [build_platform != target_platform]
       host:
-        - python >=3.6
+        - python
         - pip
       run:
-        - python >=3.6
+        - python
         - wcwidth
       run_constrained:
         - prompt_toolkit {{ version }}
