@@ -23,6 +23,8 @@ outputs:
       host:
         - python
         - pip
+        - setuptools
+        - wheel
       run:
         - python
         - wcwidth
