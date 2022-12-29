@@ -77,7 +77,7 @@ about:
     prompt_toolkit is a library for building powerful interactive command
     lines and terminal applications in Python. It can be a pure Python
     replacement for GNU readline, but it can be much more than that.
-  doc_url: http://python-prompt-toolkit.readthedocs.io
+  doc_url: https://python-prompt-toolkit.readthedocs.io/
   dev_url: https://github.com/prompt-toolkit/python-prompt-toolkit
 
 extra:
