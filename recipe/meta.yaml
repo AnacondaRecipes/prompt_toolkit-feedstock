@@ -1,26 +1,26 @@
-{% set version = "3.0.20" %}
+{% set name = "prompt-toolkit" %}
+{% set version = "3.0.36" %}
 
 package:
-  name: prompt-toolkit
+  name: {{ name|lower }}
   version: {{ version }}
 
 source:
   url: https://pypi.io/packages/source/p/prompt_toolkit/prompt_toolkit-{{ version }}.tar.gz
-  sha256: eb71d5a6b72ce6db177af4a7d4d7085b99756bf656d98ffcc4fecd36850eea6c
+  sha256: 3e163f254bef5a03b146397d7c1963bd3e2812f0964bb9a24e6ec761fd28db63
 
 build:
   number: 0
-  noarch: python
 
 outputs:
   - name: prompt-toolkit
     build:
-      noarch: python
+      # Python 3.7 is suggested
+      # see https://github.com/prompt-toolkit/python-prompt-toolkit/blob/da05f669d00817655f76b82972272d4d5f4d4225/setup.py#L38
+      skip: true  # [py<37]
     script: build_base.bat  # [win]
-    script: build_base.sh  # [not win]
+    script: build_base.sh   # [not win]
     requirements:
-      #build:
-        #- python                                 # [build_platform != target_platform]
       host:
         - python
         - pip
@@ -38,15 +38,24 @@ outputs:
         - pip check
       imports:
         - prompt_toolkit
+        - prompt_toolkit.application
         - prompt_toolkit.clipboard
+        - prompt_toolkit.completion
         - prompt_toolkit.contrib
         - prompt_toolkit.contrib.completers
         - prompt_toolkit.contrib.regular_languages
         - prompt_toolkit.eventloop
         - prompt_toolkit.filters
+        - prompt_toolkit.formatted_text
+        - prompt_toolkit.input
         - prompt_toolkit.key_binding
         - prompt_toolkit.key_binding.bindings
         - prompt_toolkit.layout
+        - prompt_toolkit.lexers
+        - prompt_toolkit.outputs
+        - prompt_toolkit.shortcuts
+        - prompt_toolkit.styles
+        - prompt_toolkit.widgets
 
   - name: prompt_toolkit
     build:
@@ -59,8 +68,9 @@ outputs:
         - prompt_toolkit
 
 about:
-  home: https://github.com/jonathanslenders/python-prompt-toolkit
+  home: https://github.com/prompt-toolkit/python-prompt-toolkit
   license: BSD-3-Clause
+  license_family: BSD
   license_file: LICENSE
   summary: Library for building powerful interactive command lines in Python
   description: |
@@ -68,7 +78,7 @@ about:
     lines and terminal applications in Python. It can be a pure Python
     replacement for GNU readline, but it can be much more than that.
   doc_url: http://python-prompt-toolkit.readthedocs.io
-  dev_url: https://github.com/jonathanslenders/python-prompt-toolkit
+  dev_url: https://github.com/prompt-toolkit/python-prompt-toolkit
 
 extra:
   recipe-maintainers:
