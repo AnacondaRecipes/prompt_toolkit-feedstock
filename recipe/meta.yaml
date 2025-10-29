@@ -6,17 +6,17 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/prompt_toolkit/prompt_toolkit-{{ version }}.tar.gz
+  url: https://pypi.org/packages/source/{{ name[0] }}/prompt_toolkit/prompt_toolkit-{{ version }}.tar.gz
   sha256: 28cde192929c8e7321de85de1ddbe736f1375148b02f2e17edd840042b1be855
 
 build:
-  number: 0
+  number: 1
   skip: true  # [py<38]
 
 outputs:
   - name: prompt-toolkit
     script: build_base.bat  # [win]
-    script: build_base.sh   # [not win]
+    script: build_base.sh  # [not win]
     requirements:
       host:
         - python
@@ -53,7 +53,6 @@ outputs:
         - prompt_toolkit.shortcuts
         - prompt_toolkit.styles
         - prompt_toolkit.widgets
-
   - name: prompt_toolkit
     build:
       noarch: generic
