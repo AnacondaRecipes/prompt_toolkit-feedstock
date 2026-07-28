@@ -1,5 +1,5 @@
 {% set name = "prompt-toolkit" %}
-{% set version = "3.0.52" %}
+{% set version = "3.0.53" %}
 
 package:
   name: {{ name|lower }}
@@ -7,10 +7,10 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/prompt_toolkit/prompt_toolkit-{{ version }}.tar.gz
-  sha256: 28cde192929c8e7321de85de1ddbe736f1375148b02f2e17edd840042b1be855
+  sha256: 9ec8a0ad96d5c56148b3f914aa79c1564c3fde5d2e6b876e7bc327e353cf8fa6
 
 build:
-  number: 1
+  number: 0
   skip: true  # [py<38]
 
 outputs:
@@ -62,6 +62,13 @@ outputs:
     test:
       imports:
         - prompt_toolkit
+      commands:
+        - pip check
+        - pip check
+        - pip check
+        - pip check
+      requires:
+        - pip
 
 about:
   home: https://github.com/prompt-toolkit/python-prompt-toolkit
