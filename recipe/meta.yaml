@@ -1,38 +1,46 @@
 {% set name = "prompt-toolkit" %}
-{% set version = "3.0.52" %}
+{% set version = "3.0.53" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}-split
   version: {{ version }}
 
 source:
-  url: https://pypi.org/packages/source/{{ name[0] }}/prompt_toolkit/prompt_toolkit-{{ version }}.tar.gz
-  sha256: 28cde192929c8e7321de85de1ddbe736f1375148b02f2e17edd840042b1be855
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace("-", "_") }}-{{ version }}.tar.gz
+  sha256: 9ec8a0ad96d5c56148b3f914aa79c1564c3fde5d2e6b876e7bc327e353cf8fa6
 
 build:
-  number: 1
-  skip: true  # [py<38]
+  number: 0
+  skip: true  # [py<310]
 
 outputs:
-  - name: prompt-toolkit
+  - name: {{ name }}
     script: build_base.bat  # [win]
     script: build_base.sh  # [not win]
     requirements:
       host:
         - python
         - pip
-        - setuptools
+        - setuptools >=68
         - wheel
       run:
         - python
-        - wcwidth
+        - wcwidth >=0.1.4
       run_constrained:
         - prompt_toolkit {{ version }}
+
+    # AssertionError: assert 'hello' == 'new input'
+    {% set deselected_tests_win = " --deselect=tests/test_cli.py::test_emacs_history_bindings" %}  # [win]
+    {% set deselected_tests_win = deselected_tests_win + " --deselect=tests/test_cli.py::test_emacs_reverse_search" %}  # [win]
+    # E           prompt_toolkit.output.win32.NoConsoleScreenBufferError: No Windows console found
+    {% set deselected_tests_win = deselected_tests_win + " --deselect=tests/test_memory_leaks.py::test_prompt_session_leak" %}  # [win]
+    {% set deselected_tests_win = deselected_tests_win + " --deselect=tests/test_memory_leaks.py::test_prompt_session_memory_leak" %}  # [win]
+    {% set deselected_tests_win = deselected_tests_win + " --deselect=tests/test_shortcuts.py::test_print_container" %}  # [win]
+  
+
     test:
-      requires:
-        - pip
-      commands:
-        - pip check
+      source_files:
+        - tests
       imports:
         - prompt_toolkit
         - prompt_toolkit.application
@@ -49,19 +57,31 @@ outputs:
         - prompt_toolkit.key_binding.bindings
         - prompt_toolkit.layout
         - prompt_toolkit.lexers
-        - prompt_toolkit.outputs
         - prompt_toolkit.shortcuts
         - prompt_toolkit.styles
         - prompt_toolkit.widgets
+      commands:
+        - pip check
+        - pytest -vv tests {{ deselected_tests_win }}  # [win]
+        - pytest -vv tests  # [not win]
+      requires:
+        - pip
+        - pytest
+
   - name: prompt_toolkit
     build:
       noarch: generic
     requirements:
       run:
         - {{ pin_subpackage('prompt-toolkit', max_pin="x.x.x") }}
+
     test:
       imports:
         - prompt_toolkit
+      commands:
+        - pip check
+      requires:
+        - pip
 
 about:
   home: https://github.com/prompt-toolkit/python-prompt-toolkit
@@ -82,3 +102,6 @@ extra:
     - ocefpaf
     - scopatz
     - asmeurer
+  skip-lints:
+    # doc_url is redirecting
+    - reachable_url
