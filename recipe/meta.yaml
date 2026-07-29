@@ -2,37 +2,36 @@
 {% set version = "3.0.53" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}-split
   version: {{ version }}
 
 source:
-  url: https://pypi.org/packages/source/{{ name[0] }}/prompt_toolkit/prompt_toolkit-{{ version }}.tar.gz
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace("-", "_") }}-{{ version }}.tar.gz
   sha256: 9ec8a0ad96d5c56148b3f914aa79c1564c3fde5d2e6b876e7bc327e353cf8fa6
 
 build:
   number: 0
-  skip: true  # [py<38]
+  skip: true  # [py<310]
 
 outputs:
-  - name: prompt-toolkit
+  - name: {{ name }}
     script: build_base.bat  # [win]
     script: build_base.sh  # [not win]
     requirements:
       host:
         - python
         - pip
-        - setuptools
+        - setuptools >=68
         - wheel
       run:
         - python
-        - wcwidth
+        - wcwidth >=0.1.4
       run_constrained:
         - prompt_toolkit {{ version }}
+
     test:
-      requires:
-        - pip
-      commands:
-        - pip check
+      source_files:
+        - tests
       imports:
         - prompt_toolkit
         - prompt_toolkit.application
@@ -49,23 +48,27 @@ outputs:
         - prompt_toolkit.key_binding.bindings
         - prompt_toolkit.layout
         - prompt_toolkit.lexers
-        - prompt_toolkit.outputs
         - prompt_toolkit.shortcuts
         - prompt_toolkit.styles
         - prompt_toolkit.widgets
+      commands:
+        - pip check
+        - pytest -vv tests
+      requires:
+        - pip
+        - pytest
+
   - name: prompt_toolkit
     build:
       noarch: generic
     requirements:
       run:
         - {{ pin_subpackage('prompt-toolkit', max_pin="x.x.x") }}
+
     test:
       imports:
         - prompt_toolkit
       commands:
-        - pip check
-        - pip check
-        - pip check
         - pip check
       requires:
         - pip
@@ -89,3 +92,6 @@ extra:
     - ocefpaf
     - scopatz
     - asmeurer
+  skip-lints:
+    # doc_url is redirecting
+    - reachable_url
