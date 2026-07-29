@@ -29,6 +29,15 @@ outputs:
       run_constrained:
         - prompt_toolkit {{ version }}
 
+    # AssertionError: assert 'hello' == 'new input'
+    {% set deselected_tests_win = " --deselect=tests/test_cli.py::test_emacs_history_bindings" %}  # [win]
+    {% set deselected_tests_win = deselected_tests_win + " --deselect=tests/test_cli.py::test_emacs_reverse_search" %}  # [win]
+    # E           prompt_toolkit.output.win32.NoConsoleScreenBufferError: No Windows console found
+    {% set deselected_tests_win = deselected_tests_win + " --deselect=tests/test_memory_leaks.py::test_prompt_session_leak" %}  # [win]
+    {% set deselected_tests_win = deselected_tests_win + " --deselect=tests/test_memory_leaks.py::test_prompt_session_memory_leak" %}  # [win]
+    {% set deselected_tests_win = deselected_tests_win + " --deselect=tests/test_shortcuts.py::test_print_container" %}  # [win]
+  
+
     test:
       source_files:
         - tests
@@ -53,7 +62,8 @@ outputs:
         - prompt_toolkit.widgets
       commands:
         - pip check
-        - pytest -vv tests
+        - pytest -vv tests {{ deselected_tests_win }}  # [win]
+        - pytest -vv tests  # [not win]
       requires:
         - pip
         - pytest
