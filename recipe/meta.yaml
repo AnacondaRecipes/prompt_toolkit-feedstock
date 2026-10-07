@@ -2,7 +2,7 @@
 {% set version = "3.0.43" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}-split
   version: {{ version }}
 
 source:
@@ -10,7 +10,7 @@ source:
   sha256: 3527b7af26106cbc65a040bcc84839a3566ec1b051bb0bfe953631e704b0ff7d
 
 build:
-  number: 0
+  number: 1
 
 outputs:
   - name: prompt-toolkit
@@ -52,7 +52,7 @@ outputs:
         - prompt_toolkit.key_binding.bindings
         - prompt_toolkit.layout
         - prompt_toolkit.lexers
-        - prompt_toolkit.outputs
+        - prompt_toolkit.output
         - prompt_toolkit.shortcuts
         - prompt_toolkit.styles
         - prompt_toolkit.widgets
@@ -61,11 +61,20 @@ outputs:
     build:
       noarch: generic
     requirements:
+      host:
+       - python
+       - pip
+       - setuptools
       run:
+        - python
         - {{ pin_subpackage('prompt-toolkit', max_pin="x.x.x") }}
     test:
       imports:
         - prompt_toolkit
+      requires:
+        - pip
+      commands:
+        - pip check
 
 about:
   home: https://github.com/prompt-toolkit/python-prompt-toolkit
@@ -77,7 +86,7 @@ about:
     prompt_toolkit is a library for building powerful interactive command
     lines and terminal applications in Python. It can be a pure Python
     replacement for GNU readline, but it can be much more than that.
-  doc_url: https://python-prompt-toolkit.readthedocs.io/
+  doc_url: https://python-prompt-toolkit.readthedocs.io
   dev_url: https://github.com/prompt-toolkit/python-prompt-toolkit
 
 extra:
